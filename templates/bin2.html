@@ -1,0 +1,320 @@
+{% extends "base.html" %}
+
+{% block title %}จัดการการคืนบรรจุภัณฑ์ - Trash For Coin{% endblock %} {# เปลี่ยน Title #}
+
+{% block content %}
+<section class="btn-primary text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-8">
+                <h1 class="display-4 fw-bold mb-4">ระบบจัดการการคืนบรรจุภัณฑ์</h1> {# เปลี่ยน Heading #}
+                <p class="lead mb-4">ค้นหาและจัดการรายการคืนบรรจุภัณฑ์ด้วยรหัสบาร์โค้ด</p> {# เปลี่ยน Paragraph #}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-4 bg-light">
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                <i class="bi bi-info-circle me-2"></i>
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+            {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        {# ส่วนสำหรับกรองรายการคำสั่งซื้อตามบาร์โค้ด (อันดับ 1) #}
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-funnel-fill me-2"></i>ค้นหารายการด้วยรหัสบาร์โค้ด</h5>
+            </div>
+            <form id="barcodeFilterForm" method="GET" action="{{ url_for('bin') }}" class="card-body">
+                <div class="row g-3 align-items-end">
+                    <div class="col-md-8">
+                        <label for="barcode_id_filter" class="form-label">ป้อนหรือสแกนรหัสบาร์โค้ดเพื่อค้นหารายการ</label>
+                        <input type="text" class="form-control" id="barcode_id_filter" name="barcode_id_filter" 
+                               placeholder="ป้อนรหัสบาร์โค้ด (13 หลัก) หรือสแกน..." 
+                               value="{{ barcode_id_filter | default('') }}" autofocus required>
+                        <div class="invalid-feedback">กรุณาระบุรหัสบาร์โค้ด 13 หลัก</div>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <button type="submit" class="btn btn-info me-2">
+                            <i class="bi bi-search me-2"></i>ค้นหา
+                        </button>
+                        <a href="{{ url_for('bin') }}" class="btn btn-secondary">
+                            <i class="bi bi-arrow-counterclockwise me-2"></i>รีเซ็ต
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<section class="py-4">
+    <div class="container">
+        {# รายการคำสั่งซื้อที่เกี่ยวข้องกับบาร์โค้ด (อันดับ 2) #}
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-table me-2"></i>รายการคืนบรรจุภัณฑ์ที่เกี่ยวข้องกับบาร์โค้ด: {{ barcode_id_filter | default('ยังไม่มีการค้นหา') }}</h5> {# เปลี่ยน Heading #}
+            </div>
+            <div class="card-body p-4">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>รหัสคำสั่งซื้อ</th>
+                                <th>รหัสสินค้า</th>
+                                <th>ชื่อสินค้า</th>
+                                <th>รหัสหมวดหมู่</th> {# เพิ่มคอลัมน์ใหม่สำหรับ Category ID #}
+                                <th>บาร์โค้ด</th>
+                                <th>จำนวน</th>
+                                <th>ทิ้ง</th>
+                                <th>อีเมล</th>
+                                <th>วันที่</th>
+                                <th>ดำเนินการ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if orders %}
+                                {% for order in orders %}
+                                <tr>
+                                    <td>{{ loop.index }}</td>
+                                    <td>{{ order.order_id }}</td> 
+                                    <td>{{ order.products_id }}</td>
+                                    <td>{{ order.products_name }}</td>
+                                    <td>{{ order.category_id }}</td> {# แสดง Category ID #}
+                                    <td>{{ order.barcode_id }}</td> 
+                                    <td>{{ order.quantity }}</td>
+                                    <td>{{ order.disquantity }}</td>
+                                    <td>{{ order.email }}</td>
+                                    <td>{{ order.order_date.strftime('%Y-%m-%d %H:%M') if order.order_date else '' }}</td>
+                                    <td>
+                                        {% if session.loggedin and session.role in ['root_admin', 'administrator', 'moderator', 'member'] %}
+                                        <button type="button" class="btn btn-sm btn-info me-1" 
+                                                data-bs-toggle="modal" data-bs-target="#editOrderItemModal"
+                                                data-id="{{ order.id }}"
+                                                data-products_id="{{ order.products_id }}"
+                                                data-products_name="{{ order.products_name }}"
+                                                data-quantity="{{ order.quantity }}"
+                                                data-disquantity="{{ order.disquantity }}"
+                                                data-order_id="{{ order.order_id }}"
+                                                data-barcode_id="{{ order.barcode_id }}">
+                                                <i class="bi bi-pencil-square"></i> แก้ไข
+                                        </button>
+                                        <form action="{{ url_for('delete_bin_item', item_id=order.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('คุณแน่ใจหรือไม่ที่จะลบรายการนี้?');">
+                                                <i class="bi bi-trash"></i> ลบ
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                            <tr><td colspan="11" class="text-center text-muted">{% if barcode_id_filter %}ไม่พบรายการที่เกี่ยวข้องกับบาร์โค้ด "{{ barcode_id_filter }}"{% else %}กรุณาป้อนรหัสบาร์โค้ดเพื่อค้นหา{% endif %}</td></tr> {# เปลี่ยน colspan เป็น 11 #}
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-4 bg-light">
+    <div class="container">
+        {# ส่วนสำหรับเพิ่มจำนวนสินค้าที่ทิ้ง (Disquantity = +1) (อันดับ 3) #}
+        {% if session.loggedin and session.role in ['root_admin', 'administrator', 'moderator'] %}
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0 fw-bold"><i class="bi bi-trash-fill me-2"></i>เพิ่มจำนวนสินค้าที่ทิ้ง (Disquantity = +1)</h5>
+            </div>
+            <form id="addDisquantityForm" method="POST" action="{{ url_for('bin') }}" class="card-body needs-validation" novalidate>
+                <input type="hidden" name="action" value="add_disquantity"> {# เปลี่ยน action name #}
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label for="barcode_id_for_disquantity" class="form-label">รหัสบาร์โค้ด</label>
+                        <input type="text" class="form-control" id="barcode_id_for_disquantity" name="barcode_id_for_disquantity" 
+                               placeholder="จะถูกเติมอัตโนมัติจากช่องค้นหา" readonly required
+                               value="{{ barcode_id_filter | default('') }}"> {# ดึงค่าจาก barcode_id_filter #}
+                        <div class="invalid-feedback">กรุณาระบุรหัสบาร์โค้ด</div>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="products_id_to_disquantity" class="form-label">รหัสสินค้า</label>
+                        <input type="text" class="form-control" id="products_id_to_disquantity" name="products_id_to_disquantity" 
+                               placeholder="ป้อนหรือสแกนรหัสสินค้า (13 หลัก) ที่ต้องการเพิ่ม Disquantity..." required autofocus {# ตั้ง autofocus ที่นี่ #}
+                               value="{{ request_form_data.products_id_to_disquantity | default('') }}"> {# เก็บค่าที่กรอกไว้ #}
+                        <div class="invalid-feedback">กรุณาระบุรหัสสินค้า 13 หลัก</div>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-plus-circle me-2"></i>ดำเนินการเพิ่ม Disquantity (+1)
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+{# Modal สำหรับแก้ไขรายการ ยังคงเดิม #}
+<div class="modal fade" id="editOrderItemModal" tabindex="-1" aria-labelledby="editOrderItemModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-info text-white">
+                <h5 class="modal-title" id="editOrderItemModalLabel">แก้ไขรายการคืนบรรจุภัณฑ์</h5> {# เปลี่ยน Title #}
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" id="editOrderItemForm">
+                <div class="modal-body">
+                    <input type="hidden" name="order_id" id="edit_order_id_hidden">
+                    <input type="hidden" name="products_id" id="edit_products_id_hidden">
+                    <div class="mb-3">
+                        <label for="edit_products_name" class="form-label">ชื่อสินค้า</label>
+                        <input type="text" class="form-control" id="edit_products_name" readonly disabled>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_quantity" class="form-label">จำนวน</label>
+                        <input type="number" class="form-control" id="edit_quantity" name="quantity" min="1" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_disquantity" class="form-label">ทิ้ง</label>
+                        <input type="number" class="form-control" id="edit_disquantity" name="disquantity" min="0" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="edit_barcode_id" class="form-label">บาร์โค้ด</label>
+                        <input type="text" class="form-control" id="edit_barcode_id" name="barcode_id" readonly>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ยกเลิก</button>
+                    <button type="submit" class="btn btn-info">บันทึกการแก้ไข</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const barcodeFilterForm = document.getElementById('barcodeFilterForm');
+        const barcodeIdFilterInput = document.getElementById('barcode_id_filter');
+        const barcodeIdForDisquantityInput = document.getElementById('barcode_id_for_disquantity');
+        const productsIdToDisquantityInput = document.getElementById('products_id_to_disquantity');
+        const addDisquantityForm = document.getElementById('addDisquantityForm'); // เปลี่ยนชื่อ form ID
+
+        // --- Logic สำหรับการค้นหาบาร์โค้ดอัตโนมัติ ---
+        if (barcodeIdFilterInput) {
+            barcodeIdFilterInput.addEventListener('input', function() {
+                const enteredBarcode = this.value.trim();
+                if (enteredBarcode.length === 13) {
+                    // ตรวจสอบความถูกต้องของฟอร์มก่อนส่ง
+                    if (barcodeFilterForm.checkValidity()) {
+                        barcodeFilterForm.submit();
+                    } else {
+                        barcodeFilterForm.classList.add('was-validated');
+                    }
+                } else if (enteredBarcode.length > 13) {
+                    // ป้องกันการส่งหากเกิน 13 หลักโดยไม่จำเป็นต้อง reset validity
+                    this.setCustomValidity('รหัสบาร์โค้ดต้องมี 13 หลัก');
+                    barcodeFilterForm.classList.add('was-validated');
+                } else {
+                    this.setCustomValidity(''); // ล้าง custom validity ถ้ายังไม่ครบ 13 หลัก
+                    barcodeFilterForm.classList.remove('was-validated');
+                }
+            });
+
+            // ตั้งค่า focus ให้กับ input รหัสบาร์โค้ดเมื่อหน้าโหลดเสร็จ
+            barcodeIdFilterInput.focus();
+        }
+
+        // --- Logic สำหรับการเพิ่ม Disquantity (+1) ---
+        if (barcodeIdForDisquantityInput && productsIdToDisquantityInput && addDisquantityForm) {
+            // เมื่อค่าในช่องกรองบาร์โค้ดเปลี่ยน ให้คัดลอกไปยังช่องบาร์โค้ดในฟอร์มเพิ่ม Disquantity
+            // (อันนี้ใช้ในกรณีที่ผู้ใช้พิมพ์ในช่องกรองแล้วระบบยังไม่รีเฟรชหน้า)
+            barcodeIdFilterInput.addEventListener('input', function() {
+                barcodeIdForDisquantityInput.value = this.value.trim();
+            });
+
+            // เมื่อป้อน products_id_to_disquantity ครบ 13 หลัก ให้ส่งฟอร์มโดยอัตโนมัติ
+            productsIdToDisquantityInput.addEventListener('input', function() {
+                const enteredProductIdForDisquantity = this.value.trim();
+                if (enteredProductIdForDisquantity.length === 13) {
+                    // ตรวจสอบว่า barcode_id_for_disquantity มีค่าก่อนส่งฟอร์ม disquantity
+                    if (barcodeIdForDisquantityInput.value.trim() !== '' && addDisquantityForm.checkValidity()) {
+                        addDisquantityForm.submit();
+                    } else {
+                        addDisquantityForm.classList.add('was-validated');
+                    }
+                } else if (enteredProductIdForDisquantity.length > 13) {
+                    this.setCustomValidity('รหัสสินค้าต้องมี 13 หลัก');
+                    addDisquantityForm.classList.add('was-validated');
+                } else {
+                    this.setCustomValidity('');
+                    addDisquantityForm.classList.remove('was-validated');
+                }
+            });
+        }
+
+        // --- JavaScript สำหรับ Modal แก้ไขรายการ ---
+        const editOrderItemModal = document.getElementById('editOrderItemModal');
+        editOrderItemModal.addEventListener('show.bs.modal', function (event) {
+            const button = event.relatedTarget; // Button that triggered the modal
+            const itemId = button.dataset.id;
+            const productsId = button.dataset.products_id;
+            const productsName = button.dataset.products_name;
+            const quantity = button.dataset.quantity;
+            const disquantity = button.dataset.disquantity;
+            const orderId = button.dataset.order_id;
+            const barcodeId = button.dataset.barcode_id;
+
+            const modalTitle = editOrderItemModal.querySelector('.modal-title');
+            const editForm = editOrderItemModal.querySelector('#editOrderItemForm');
+            const editProductsName = editOrderItemModal.querySelector('#edit_products_name');
+            const editQuantity = editOrderItemModal.querySelector('#edit_quantity');
+            const editDisquantity = editOrderItemModal.querySelector('#edit_disquantity');
+            const editOrderIdHidden = editOrderItemModal.querySelector('#edit_order_id_hidden');
+            const editProductsIdHidden = editOrderItemModal.querySelector('#edit_products_id_hidden');
+            const editBarcodeId = editOrderItemModal.querySelector('#edit_barcode_id');
+
+            modalTitle.textContent = `แก้ไขรายการ: ${productsName}`;
+            editProductsName.value = productsName;
+            editQuantity.value = quantity;
+            editDisquantity.value = disquantity;
+            editOrderIdHidden.value = orderId;
+            editProductsIdHidden.value = productsId;
+            editBarcodeId.value = barcodeId; // บาร์โค้ดใน modal จะเป็น Readonly
+
+            // ตั้งค่า action ของ form ให้ถูกต้อง
+            editForm.action = `/bin/edit/${itemId}`;
+        });
+
+        // Bootstrap validation
+        (function () {
+            'use strict'
+            var forms = document.querySelectorAll('.needs-validation')
+            Array.prototype.slice.call(forms)
+                .forEach(function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (!form.checkValidity()) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+        })();
+    });
+</script>
+{% endblock %}

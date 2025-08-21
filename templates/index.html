@@ -1,0 +1,1679 @@
+{% extends "base.html" %}
+
+{% block title %}หน้าแรก - Trash For Coin | ระบบมัดจำบรรจุภัณฑ์ขยะเพื่อสิ่งแวดล้อมที่ยั่งยืน{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Enhanced Design -->
+<section class="hero-section position-relative overflow-hidden">
+    <div class="hero-background position-absolute w-100 h-100" style="background: linear-gradient(135deg, #059669 0%, #047857 50%, #065f46 100%); opacity: 0.95;"></div>
+   <div class="hero-pattern position-absolute w-100 h-100" style="background-image: url('data:image/svg+xml,%3Csvg xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22 viewBox%3D%220 0 100 100%22%3E%3Cdefs%3E%3Cpattern id%3D%22grid%22 width%3D%2210%22 height%3D%2210%22 patternUnits%3D%22userSpaceOnUse%22%3E%3Cpath d%3D%22M 10 0 L 0 0 0 10%22 fill%3D%22none%22 stroke%3D%22rgba(255%2C255%2C255%2C0.1)%22 stroke-width%3D%221%22%2F%3E%3C%2Fpattern%3E%3C%2Fdefs%3E%3Crect width%3D%22100%22 height%3D%22100%22 fill%3D%22url(%23grid)%22%2F%3E%3C%2Fsvg%3E');"></div>
+
+    <div class="container position-relative py-5">
+        <div class="row align-items-center min-vh-100 py-5">
+            <div class="col-lg-6 text-white">
+                <div class="hero-content slide-up">
+                    <h1 class="display-3 fw-bold mb-4 text-white">
+                        ขยะแลกเหรียญ
+                        <span class="d-block text-warning">เพื่อโลกที่ยั่งยืน</span>
+                    </h1>
+                    <p class="lead mb-4 text-white-50">
+                        ระบบมัดจำบรรจุภัณฑ์ขยะที่ทันสมัย ส่งเสริมการรีไซเคิลและลดขยะในชุมชน 
+                        ด้วยเทคโนโลยีที่เข้าใจง่าย ใช้งานสะดวก และสร้างรายได้ให้กับผู้ใช้งาน
+                    </p>
+                    
+                    <div class="hero-stats row g-3 mb-4">
+                        <div class="col-4">
+                            <div class="stat-item text-center">
+                                <h3 class="fw-bold text-warning mb-1">1,000+</h3>
+                                <small class="text-white-50">ผู้ใช้งาน</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item text-center">
+                                <h3 class="fw-bold text-warning mb-1">50,000+</h3>
+                                <small class="text-white-50">ขยะที่รีไซเคิล</small>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="stat-item text-center">
+                                <h3 class="fw-bold text-warning mb-1">95%</h3>
+                                <small class="text-white-50">ความพึงพอใจ</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="hero-actions d-flex flex-wrap gap-3">
+                        {% if not session.loggedin %}
+                        <a href="{{ url_for('register') }}" class="btn btn-warning btn-lg px-4 py-3">
+                            <i class="bi bi-person-plus me-2"></i>เริ่มต้นใช้งาน
+                        </a>
+                        <a href="{{ url_for('about') }}" class="btn btn-outline-light btn-lg px-4 py-3">
+                            <i class="bi bi-info-circle me-2"></i>เรียนรู้เพิ่มเติม
+                        </a>
+                        {% else %}
+                        <a href="{{ url_for('tbl_order') }}" class="btn btn-warning btn-lg px-4 py-3">
+                            <i class="bi bi-cart-check me-2"></i>ดูคำสั่งซื้อ
+                        </a>
+                        {% if session.role in ['root_admin', 'administrator', 'moderator'] %}
+                        <a href="{{ url_for('cart') }}" class="btn btn-outline-light btn-lg px-4 py-3">
+                            <i class="bi bi-upc-scan me-2"></i>เริ่มสแกน
+                        </a>
+                        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6">
+                <div class="hero-visual text-center slide-up" style="animation-delay: 0.2s;">
+                    <div class="floating-elements position-relative">
+                        <!-- Main Recycle Icon -->
+                        <div class="main-icon bg-white rounded-circle d-inline-flex align-items-center justify-content-center shadow-lg" 
+                             style="width: 200px; height: 200px; animation: float 3s ease-in-out infinite;">
+                            <i class="bi bi-recycle text-success" style="font-size: 5rem;"></i>
+                        </div>
+                        
+                        <!-- Floating Elements -->
+                        <div class="floating-item position-absolute bg-warning rounded-circle d-flex align-items-center justify-content-center shadow" 
+                             style="width: 60px; height: 60px; top: -20px; right: 20px; animation: float 3s ease-in-out infinite 0.5s;">
+                            <i class="bi bi-coin text-white fs-4"></i>
+                        </div>
+                        
+                        <div class="floating-item position-absolute bg-info rounded-circle d-flex align-items-center justify-content-center shadow" 
+                             style="width: 50px; height: 50px; bottom: 20px; left: -10px; animation: float 3s ease-in-out infinite 1s;">
+                            <i class="bi bi-leaf text-white fs-5"></i>
+                        </div>
+                        
+                        <div class="floating-item position-absolute bg-danger rounded-circle d-flex align-items-center justify-content-center shadow" 
+                             style="width: 40px; height: 40px; top: 50px; left: -20px; animation: float 3s ease-in-out infinite 1.5s;">
+                            <i class="bi bi-heart text-white"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scroll Indicator -->
+    <div class="scroll-indicator position-absolute bottom-0 start-50 translate-middle-x mb-4">
+        <div class="scroll-arrow text-white text-center" style="animation: bounce 2s infinite;">
+            <i class="bi bi-chevron-down fs-4"></i>
+            <div class="small">เลื่อนลงเพื่อดูเพิ่มเติม</div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="display-5 fw-bold mb-4">ทำไมต้องเลือก Trash For Coin?</h2>
+                <p class="lead text-muted">
+                    ระบบที่ออกแบบมาเพื่อให้การจัดการขยะเป็นเรื่องง่าย มีกำไร และเป็นมิตรกับสิ่งแวดล้อม
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-currency-dollar text-primary fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">สร้างรายได้</h4>
+                        <p class="text-muted mb-4">
+                            รับเงินมัดจำคืนทุกครั้งที่นำบรรจุภัณฑ์มาคืน ระบบโปร่งใส ได้เงินจริง
+                        </p>
+                        <div class="feature-highlight bg-primary bg-opacity-10 rounded p-3">
+                            <strong class="text-primary">1 บาท</strong> ต่อ 1 ชิ้น
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-leaf text-success fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">รักษ์โลก</h4>
+                        <p class="text-muted mb-4">
+                            ช่วยลดขยะที่ไปหลุมฝังกลบ ส่งเสริมการรีไซเคิล เพื่อสิ่งแวดล้อมที่ดีขึ้น
+                        </p>
+                        <div class="feature-highlight bg-success bg-opacity-10 rounded p-3">
+                            <strong class="text-success">95%</strong> ลดขยะ
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="feature-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="feature-icon bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-phone text-info fs-1"></i>
+                        </div>
+                        <h4 class="fw-bold mb-3">ใช้งานง่าย</h4>
+                        <p class="text-muted mb-4">
+                            ระบบที่เข้าใจง่าย ใช้งานสะดวก ผ่านเว็บไซต์ที่ทันสมัย
+                        </p>
+                        <div class="feature-highlight bg-info bg-opacity-10 rounded p-3">
+                            <strong class="text-info">24/7</strong> พร้อมใช้งาน
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="py-5">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="display-5 fw-bold mb-4">วิธีการใช้งาน</h2>
+                <p class="lead text-muted">
+                    เพียง 4 ขั้นตอนง่ายๆ คุณก็สามารถเริ่มสร้างรายได้จากขยะได้แล้ว
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card text-center">
+                    <div class="step-number bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">1</div>
+                    <div class="step-icon bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-person-plus text-primary fs-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">สมัครสมาชิก</h5>
+                    <p class="text-muted">
+                        ลงทะเบียนเข้าใช้งานระบบ ฟรี! ไม่มีค่าใช้จ่าย
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card text-center">
+                    <div class="step-number bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">2</div>
+                    <div class="step-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-bag text-success fs-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">ซื้อสินค้า</h5>
+                    <p class="text-muted">
+                        ซื้อสินค้าที่มีบรรจุภัณฑ์ และจ่ายเงินมัดจำ
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card text-center">
+                    <div class="step-number bg-warning text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">3</div>
+                    <div class="step-icon bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-recycle text-warning fs-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">นำบรรจุภัณฑ์คืน</h5>
+                    <p class="text-muted">
+                        นำบรรจุภัณฑ์ที่ใช้แล้วมาคืนที่จุดรับ
+                    </p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="step-card text-center">
+                    <div class="step-number bg-info text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                         style="width: 60px; height: 60px; font-size: 1.5rem; font-weight: bold;">4</div>
+                    <div class="step-icon bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-cash-coin text-info fs-1"></i>
+                    </div>
+                    <h5 class="fw-bold mb-3">รับเงินคืน</h5>
+                    <p class="text-muted">
+                        รับเงินมัดจำคืนทันที ผ่านระบบที่ปลอดภัย
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Waste Types Section -->
+<section class="py-5 bg-light">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="display-5 fw-bold mb-4">ประเภทขยะที่รองรับ</h2>
+                <p class="lead text-muted">
+                    ระบบรองรับการจัดการขยะ 5 ประเภทหลัก ครอบคลุมบรรจุภัณฑ์ส่วนใหญ่
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="waste-type-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="waste-icon bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-cup-straw text-primary fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">พลาสติก PET</h5>
+                        <p class="text-muted mb-3">
+                            ขวดน้ำ ขวดน้ำอัดลม ภาชนะพลาสติกใส
+                        </p>
+                        <div class="badge bg-primary">มัดจำ 1 บาท/ชิ้น</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="waste-type-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="waste-icon bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi-box text-success fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">อลูมิเนียม</h5>
+                        <p class="text-muted mb-3">
+                            กระป๋องเครื่องดื่ม ภาชนะอลูมิเนียม
+                        </p>
+                        <div class="badge bg-success">มัดจำ 1 บาท/ชิ้น</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 col-md-6">
+                <div class="waste-type-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="waste-icon bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-cup-hot text-info fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">แก้ว</h5>
+                        <p class="text-muted mb-3">
+                            ขวดแก้ว ภาชนะแก้วที่สามารถหลอมได้
+                        </p>
+                        <div class="badge bg-info">มัดจำ 1 บาท/ชิ้น</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6">
+                <div class="waste-type-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="waste-icon bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-fire text-warning fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">วัสดุเผาเพื่อพลังงาน</h5>
+                        <p class="text-muted mb-3">
+                            ขยะที่สามารถนำไปเผาเพื่อผลิตพลังงาน
+                        </p>
+                        <div class="badge bg-warning">มัดจำ 1 บาท/ชิ้น</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-6 col-md-6">
+                <div class="waste-type-card card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center p-4">
+                        <div class="waste-icon bg-danger bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-4" 
+                             style="width: 80px; height: 80px;">
+                            <i class="bi bi-exclamation-triangle text-danger fs-1"></i>
+                        </div>
+                        <h5 class="fw-bold mb-3">ขยะปนเปื้อน</h5>
+                        <p class="text-muted mb-3">
+                            ขยะที่มีการปนเปื้อนอาหาร ต้องมีการจัดการอย่างเหมาะสม
+                        </p>
+                        <div class="badge bg-danger">มัดจำ 1 บาท/ชิ้น</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Statistics Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center mb-5">
+                <h2 class="display-5 fw-bold mb-4">ผลกระทบเชิงบวก</h2>
+                <p class="lead text-white-50">
+                    ร่วมกันสร้างการเปลี่ยนแปลงที่ดีต่อสิ่งแวดล้อมและสังคม
+                </p>
+            </div>
+        </div>
+        
+        <div class="row g-4 text-center">
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon bg-white bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-people text-white fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold text-warning mb-2">1,247</h3>
+                    <p class="text-white-50 mb-0">ผู้ใช้งานทั้งหมด</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon bg-white bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-recycle text-white fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold text-warning mb-2">52,891</h3>
+                    <p class="text-white-50 mb-0">ขยะที่รีไซเคิลแล้ว</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon bg-white bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-cash-coin text-white fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold text-warning mb-2">₿ 45,672</h3>
+                    <p class="text-white-50 mb-0">เงินมัดจำที่จ่ายคืน</p>
+                </div>
+            </div>
+            
+            <div class="col-lg-3 col-md-6">
+                <div class="stat-item">
+                    <div class="stat-icon bg-white bg-opacity-20 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px;">
+                        <i class="bi bi-tree text-white fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold text-warning mb-2">127</h3>
+                    <p class="text-white-50 mb-0">ต้นไม้ที่ช่วยรักษาได้</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action Section -->
+<section class="py-5">
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-8 mx-auto text-center">
+                <div class="cta-card card border-0 shadow-lg bg-gradient" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                    <div class="card-body p-5">
+                        <h2 class="display-5 fw-bold mb-4">พร้อมเริ่มต้นแล้วหรือยัง?</h2>
+                        <p class="lead text-muted mb-4">
+                            เข้าร่วมกับเราวันนี้ และเป็นส่วนหนึ่งของการเปลี่ยนแปลงเพื่อสิ่งแวดล้อมที่ดีขึ้น 
+                            พร้อมสร้างรายได้จากขยะที่คุณมี
+                        </p>
+                        
+                        <div class="cta-actions d-flex flex-wrap gap-3 justify-content-center">
+                            {% if not session.loggedin %}
+                            <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg px-5 py-3">
+                                <i class="bi bi-person-plus me-2"></i>สมัครสมาชิกฟรี
+                            </a>
+                            <a href="{{ url_for('about') }}" class="btn btn-outline-primary btn-lg px-5 py-3">
+                                <i class="bi bi-info-circle me-2"></i>เรียนรู้เพิ่มเติม
+                            </a>
+                            {% else %}
+                            <a href="{{ url_for('tbl_order') }}" class="btn btn-primary btn-lg px-5 py-3">
+                                <i class="bi bi-cart-check me-2"></i>ดูคำสั่งซื้อของฉัน
+                            </a>
+                            {% if session.role in ['root_admin', 'administrator', 'moderator'] %}
+                            <a href="{{ url_for('cart') }}" class="btn btn-outline-primary btn-lg px-5 py-3">
+                                <i class="bi bi-upc-scan me-2"></i>เริ่มสแกนสินค้า
+                            </a>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                        
+                        <div class="cta-features row g-3 mt-4">
+                            <div class="col-md-4">
+                                <div class="feature-item d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="small text-muted">ฟรี ไม่มีค่าใช้จ่าย</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-item d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="small text-muted">ปลอดภัย เชื่อถือได้</span>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="feature-item d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    <span class="small text-muted">ใช้งานง่าย สะดวก</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Enhanced CSS for animations -->
+<style>
+    @keyframes float {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-20px); }
+    }
+    
+    @keyframes bounce {
+        0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+        40% { transform: translateY(-10px); }
+        60% { transform: translateY(-5px); }
+    }
+    
+    .hero-section {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-10px);
+        transition: all 0.3s ease;
+    }
+    
+    .step-card:hover .step-icon {
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+    
+    .waste-type-card:hover {
+        transform: translateY(-5px);
+        transition: all 0.3s ease;
+    }
+    
+    .stat-item:hover .stat-icon {
+        transform: scale(1.1);
+        transition: all 0.3s ease;
+    }
+    
+    .cta-card {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .cta-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+    
+    .cta-card:hover::before {
+        left: 100%;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Enhanced scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, observerOptions);
+    
+    // Observe all cards and sections
+    document.querySelectorAll('.card, .step-card, .stat-item').forEach(el => {
+        observer.observe(el);
+    });
+    
+    // Enhanced counter animation
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-item h3');
+        counters.forEach(counter => {
+            const target = parseInt(counter.textContent.replace(/[^\d]/g, ''));
+            const increment = target / 100;
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                const formatted = Math.floor(current).toLocaleString();
+                const originalText = counter.textContent;
+                const prefix = originalText.match(/^[^\d]*/)[0];
+                counter.textContent = prefix + formatted;
+            }, 20);
+        });
+    }
+    
+    // Trigger counter animation when statistics section is visible
+    const statsSection = document.querySelector('.bg-primary');
+    if (statsSection) {
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        statsObserver.observe(statsSection);
+    }
+    
+    // Smooth scroll for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+    
+    // Enhanced parallax effect for hero section
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        const heroBackground = document.querySelector('.hero-background');
+        const heroPattern = document.querySelector('.hero-pattern');
+        
+        if (heroBackground) {
+            heroBackground.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+        if (heroPattern) {
+            heroPattern.style.transform = `translateY(${scrolled * 0.3}px)`;
+        }
+    });
+</script>
+
+                <section id="user-roles" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>บทบาทผู้ใช้งาน</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-danger mb-3">
+                                        <div class="card-header bg-danger text-white">
+                                            <h5><i class="bi bi-shield-fill me-2"></i>Root Admin</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>สิทธิ์สูงสุดในระบบ สามารถ:</p>
+                                            <ul>
+                                                <li>จัดการผู้ใช้งานทุกระดับ</li>
+                                                <li>เข้าถึงข้อมูลทั้งหมด</li>
+                                                <li>ตั้งค่าระบบ</li>
+                                                <li>ดูรายงานทั้งหมด</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-warning mb-3">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h5><i class="bi bi-person-gear me-2"></i>Administrator</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>ผู้ดูแลระบบ สามารถ:</p>
+                                            <ul>
+                                                <li>จัดการผู้ใช้งาน (ยกเว้น Root Admin)</li>
+                                                <li>จัดการสินค้าและหมวดหมู่</li>
+                                                <li>ดูรายงานทั้งหมด</li>
+                                                <li>จัดการคำสั่งซื้อ</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-info mb-3">
+                                        <div class="card-header bg-info text-white">
+                                            <h5><i class="bi bi-person-check me-2"></i>Moderator</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>ผู้ดูแลเนื้อหา สามารถ:</p>
+                                            <ul>
+                                                <li>จัดการสินค้าและหมวดหมู่</li>
+                                                <li>จัดการคำสั่งซื้อ</li>
+                                                <li>ดูรายงานส่วนใหญ่</li>
+                                                <li>ส่งออกข้อมูล</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-primary mb-3">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5><i class="bi bi-person me-2"></i>Member</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>สมาชิกทั่วไป สามารถ:</p>
+                                            <ul>
+                                                <li>ดูและจัดการคำสั่งซื้อของตนเอง</li>
+                                                <li>ดูข้อมูลสินค้า</li>
+                                                <li>ส่งออกรายงานส่วนตัว</li>
+                                                <li>อัปเดตโปรไฟล์</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-secondary mb-3">
+                                        <div class="card-header bg-secondary text-white">
+                                            <h5><i class="bi bi-eye me-2"></i>Viewer</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p>ผู้ดูข้อมูล สามารถ:</p>
+                                            <ul>
+                                                <li>ดูข้อมูลทั่วไป</li>
+                                                <li>ดูสถิติระบบ</li>
+                                                <li>ดูรายการสินค้า</li>
+                                                <li>ไม่สามารถแก้ไขข้อมูล</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="getting-started" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>เริ่มต้นใช้งาน</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>1. การสมัครสมาชิก</h4>
+                                    <ol>
+                                        <li>เข้าสู่หน้าเว็บไซต์</li>
+                                        <li>คลิกปุ่ม "สมัครสมาชิก"</li>
+                                        <li>กรอกข้อมูล: ชื่อ, นามสกุล, อีเมล, รหัสผ่าน</li>
+                                        <li>คลิก "สมัครสมาชิก"</li>
+                                        <li>ระบบจะกำหนดบทบาทเป็น "Member" โดยอัตโนมัติ</li>
+                                    </ol>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>2. การเข้าสู่ระบบ</h4>
+                                    <ol>
+                                        <li>คลิกปุ่ม "เข้าสู่ระบบ"</li>
+                                        <li>กรอกอีเมลและรหัสผ่าน</li>
+                                        <li>คลิก "เข้าสู่ระบบ"</li>
+                                        <li>ระบบจะพาเข้าสู่หน้าแรก</li>
+                                        <li>ดูบทบาทของคุณที่มุมขวาบน</li>
+                                    </ol>
+                                </div>
+                            </div>
+                            
+                            <div class="alert alert-info">
+                                <h5><i class="bi bi-info-circle me-2"></i>หมายเหตุสำคัญ</h5>
+                                <p>สำหรับการตั้งค่าครั้งแรก ผู้ดูแลระบบต้องรันคำสั่ง SQL ต่อไปนี้:</p>
+                                <code>
+                                    ALTER TABLE tbl_users ADD COLUMN role VARCHAR(50) DEFAULT 'member';<br>
+                                    UPDATE tbl_users SET role = 'root_admin' WHERE email = 'your_admin_email@example.com';
+                                </code>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="features" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>คุณสมบัติหลัก</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card border-primary mb-3">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5><i class="bi bi-tags me-2"></i>จัดการหมวดหมู่</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul>
+                                                <li>เพิ่ม/แก้ไข/ลบหมวดหมู่</li>
+                                                <li>ค้นหาหมวดหมู่</li>
+                                                <li>จัดการ 5 ประเภทหลัก</li>
+                                                <li>ระบบ validation</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-success mb-3">
+                                        <div class="card-header bg-success text-white">
+                                            <h5><i class="bi bi-box me-2"></i>จัดการสินค้า</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul>
+                                                <li>เพิ่ม/แก้ไข/ลบสินค้า</li>
+                                                <li>ติดตามสต็อก</li>
+                                                <li>กำหนดราคาและหมวดหมู่</li>
+                                                <li>ส่งออกข้อมูล CSV</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-warning mb-3">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h5><i class="bi bi-cart-check me-2"></i>จัดการคำสั่งซื้อ</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <ul>
+                                                <li>สร้างคำสั่งซื้อ</li>
+                                                <li>อัปเดตสต็อกอัตโนมัติ</li>
+                                                <li>ระบบมัดจำ 1 บาท/ชิ้น</li>
+                                                <li>ส่งออกรายงาน PDF</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="waste-types" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>ประเภทขยะที่รองรับ</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="card border-primary mb-3">
+                                        <div class="card-header bg-primary text-white">
+                                            <h5><i class="bi bi-cup-straw me-2"></i>PET</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>ภาชนะพลาสติกประเภท PET</strong></p>
+                                            <ul>
+                                                <li>ขวดน้ำพลาสติก</li>
+                                                <li>ขวดน้ำอัดลม</li>
+                                                <li>ขวดน้ำผลไม้</li>
+                                                <li>สามารถนำไปแปรรูปเป็นเม็ดพลาสติก</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-success mb-3">
+                                        <div class="card-header bg-success text-white">
+                                            <h5><i class="bi bi-cup me-2"></i>อลูมิเนียม</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>ภาชนะอลูมิเนียม</strong></p>
+                                            <ul>
+                                                <li>กระป๋องเครื่องดื่ม</li>
+                                                <li>กระป๋องเบียร์</li>
+                                                <li>ฝาขวดอลูมิเนียม</li>
+                                                <li>สามารถหลอมและขึ้นรูปใหม่ได้</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card border-info mb-3">
+                                        <div class="card-header bg-info text-white">
+                                            <h5><i class="bi bi-cup-hot me-2"></i>แก้ว</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>ภาชนะแก้ว</strong></p>
+                                            <ul>
+                                                <li>ขวดแก้วเครื่องดื่ม</li>
+                                                <li>ขวดแก้วยา</li>
+                                                <li>ขวดแก้วปรุงรส</li>
+                                                <li>วงจรการรีไซเคิลที่ยั่งยืน</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card border-warning mb-3">
+                                        <div class="card-header bg-warning text-dark">
+                                            <h5><i class="bi bi-fire me-2"></i>วัสดุสำหรับเผา</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>ขยะที่เหมาะสำหรับเผาเพื่อผลิตพลังงาน</strong></p>
+                                            <ul>
+                                                <li>พลาสติกปนเปื้อนน้ำมัน</li>
+                                                <li>ถุงพลาสติกหลายชั้น</li>
+                                                <li>โฟมบรรจุภัณฑ์</li>
+                                                <li>กระดาษเคลือบพลาสติก</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card border-danger mb-3">
+                                        <div class="card-header bg-danger text-white">
+                                            <h5><i class="bi bi-exclamation-triangle me-2"></i>ขยะปนเปื้อน</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>ขยะที่ต้องจัดการพิเศษ</strong></p>
+                                            <ul>
+                                                <li>บรรจุภัณฑ์เปียก</li>
+                                                <li>ขยะปนเปื้อนของเหลว</li>
+                                                <li>ขยะปนเปื้อนน้ำมัน</li>
+                                                <li>ต้องมีการจัดการอย่างเหมาะสม</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="deposit-system" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>ระบบมัดจำ</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <h4>การทำงานของระบบมัดจำ</h4>
+                                    <ol>
+                                        <li><strong>ซื้อสินค้า:</strong> ร้านค้าจะเก็บเงินมัดจำ 1 บาทต่อชิ้น</li>
+                                        <li><strong>ได้รับใบเสร็จ:</strong> พร้อมรหัส barcode สำหรับการคืนขยะ</li>
+                                        <li><strong>ใช้สินค้า:</strong> และเก็บบรรจุภัณฑ์ไว้</li>
+                                        <li><strong>คัดแยกขยะ:</strong> ตามประเภท 5 ประเภท</li>
+                                        <li><strong>นำไปทิ้ง:</strong> ที่ตู้รับขยะอัตโนมัติ</li>
+                                        <li><strong>สแกน barcode:</strong> จากใบเสร็จ</li>
+                                        <li><strong>ทิ้งขยะ:</strong> ในช่องที่ถูกต้อง</li>
+                                        <li><strong>รับเงินคืน:</strong> ทันที 1 บาทต่อชิ้น</li>
+                                    </ol>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card bg-light">
+                                        <div class="card-header">
+                                            <h5>ข้อมูลสถิติ</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <p><strong>อัตราคืนขยะ:</strong> 98% (เยอรมนี)</p>
+                                            <p><strong>เงินมัดจำ:</strong> 1 บาทต่อชิ้น</p>
+                                            <p><strong>ประเภทขยะ:</strong> 5 ประเภท</p>
+                                            <p><strong>ผลประโยชน์:</strong> ลดขยะในหลุมฝังกลบ</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="technical" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>ข้อมูลเทคนิคและการติดตั้ง</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>ความต้องการของระบบ</h4>
+                                    <ul>
+                                        <li><strong>เว็บเซิร์ฟเวอร์:</strong> Flask (Python)</li>
+                                        <li><strong>ฐานข้อมูล:</strong> MySQL</li>
+                                        <li><strong>Frontend:</strong> HTML, Bootstrap 5</li>
+                                        <li><strong>ไลบรารี:</strong> mysql-connector-python, xhtml2pdf</li>
+                                    </ul>
+                                    
+                                    <h4>โครงสร้างฐานข้อมูล</h4>
+                                    <ul>
+                                        <li><strong>tbl_users:</strong> ข้อมูลผู้ใช้และบทบาท</li>
+                                        <li><strong>tbl_category:</strong> หมวดหมู่ขยะ</li>
+                                        <li><strong>tbl_products:</strong> สินค้าและบรรจุภัณฑ์</li>
+                                        <li><strong>tbl_order:</strong> คำสั่งซื้อและการทิ้งขยะ</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>อุปกรณ์ฮาร์ดแวร์</h4>
+                                    <ul>
+                                        <li>Raspberry Pi 4 (1GB)</li>
+                                        <li>Automatic Scanner</li>
+                                        <li>เครื่องพิมพ์ใบเสร็จ 58MM</li>
+                                        <li>LCD Display Module</li>
+                                        <li>เครื่องจ่ายเหรียญ 24V</li>
+                                        <li>หม้อแปลงไฟฟ้า 300W</li>
+                                        <li>เซ็นเซอร์และ LED</li>
+                                    </ul>
+                                    
+                                    <h4>งบประมาณ</h4>
+                                    <p><strong>ต้นทุนรวม:</strong> 6,023 บาท</p>
+                                    <p><strong>ผลตอบแทน:</strong> ลดต้นทุนจัดการขยะ</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คู่มือผู้พัฒนา - Trash For Coin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .code-block { background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 10px 0; }
+        .highlight { background: #fff3cd; padding: 2px 5px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+    <div class="container py-5">
+        <div class="row">
+            <div class="col-lg-3">
+                <div class="sticky-top" style="top: 20px;">
+                    <div class="card">
+                        <div class="card-header bg-dark text-white">
+                            <h5 class="mb-0">สารบัญ</h5>
+                        </div>
+                        <div class="card-body">
+                            <ul class="nav nav-pills flex-column">
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#architecture">สถาปัตยกรรม</a>
+                                </li>
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#installation">การติดตั้ง</a>
+                                </li>
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#database">ฐานข้อมูล</a>
+                                </li>
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#authentication">ระบบยืนยันตัวตน</a>
+                                </li>
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#api">API Documentation</a>
+                                </li>
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#security">ความปลอดภัย</a>
+                                </li>
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#deployment">การ Deploy</a>
+                                </li>
+                                <li class="nav-item mb-2">
+                                    <a class="nav-link" href="#troubleshooting">การแก้ปัญหา</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-9">
+                <div class="card mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h1 class="mb-0">
+                            <i class="bi bi-code-slash me-2"></i>
+                            คู่มือผู้พัฒนา - Trash For Coin
+                        </h1>
+                    </div>
+                    <div class="card-body">
+                        <p class="lead">เอกสารสำหรับผู้พัฒนาระบบ Trash For Coin</p>
+                        <p class="text-muted">เวอร์ชัน 1.0 | Flask + MySQL + Bootstrap 5</p>
+                    </div>
+                </div>
+
+                <section id="architecture" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>สถาปัตยกรรมระบบ</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>Backend (Flask)</h4>
+                                    <ul>
+                                        <li><strong>Framework:</strong> Flask (Python)</li>
+                                        <li><strong>Database:</strong> MySQL</li>
+                                        <li><strong>ORM:</strong> mysql-connector-python</li>
+                                        <li><strong>Authentication:</strong> Flask Sessions</li>
+                                        <li><strong>PDF Generation:</strong> xhtml2pdf</li>
+                                    </ul>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>Frontend</h4>
+                                    <ul>
+                                        <li><strong>Templates:</strong> Jinja2</li>
+                                        <li><strong>CSS Framework:</strong> Bootstrap 5.3.0</li>
+                                        <li><strong>Icons:</strong> Bootstrap Icons</li>
+                                        <li><strong>Fonts:</strong> Google Fonts (Inter, Sarabun)</li>
+                                        <li><strong>JavaScript:</strong> Vanilla JS</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <h4>โครงสร้างโฟลเดอร์</h4>
+                            <div class="code-block">
+                                <pre>
+trash-for-coin/
+├── app.py                  # Main Flask application
+├── templates/              # HTML templates
+│   ├── base.html          # Base template
+│   ├── index.html         # Homepage
+│   ├── login.html         # Login page
+│   ├── register.html      # Registration page
+│   ├── profile.html       # User profile
+│   ├── about.html         # About page
+│   ├── contact.html       # Contact page
+│   ├── tbl_category.html  # Category management
+│   ├── tbl_products.html  # Product management
+│   ├── tbl_order.html     # Order management
+│   ├── tbl_users.html     # User management
+│   └── pdf_template.html  # PDF export template
+├── static/                # Static files (if any)
+└── requirements.txt       # Python dependencies
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="installation" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>การติดตั้งและเริ่มต้น</h2>
+                        </div>
+                        <div class="card-body">
+                            <h4>1. ความต้องการเบื้องต้น</h4>
+                            <ul>
+                                <li>Python 3.7+</li>
+                                <li>MySQL 5.7+</li>
+                                <li>pip (Python package manager)</li>
+                            </ul>
+                            
+                            <h4>2. ติดตั้ง Dependencies</h4>
+                            <div class="code-block">
+                                <pre>pip install flask mysql-connector-python xhtml2pdf</pre>
+                            </div>
+                            
+                            <h4>3. ตั้งค่าฐานข้อมูล</h4>
+                            <div class="code-block">
+                                <pre>
+CREATE DATABASE project_bin;
+USE project_bin;
+
+-- สร้างตาราง users
+CREATE TABLE tbl_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    firstname VARCHAR(100) NOT NULL,
+    lastname VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    role VARCHAR(50) DEFAULT 'member',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- สร้างตาราง category
+CREATE TABLE tbl_category (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    category_id VARCHAR(50) UNIQUE NOT NULL,
+    category_name VARCHAR(100) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- สร้างตาราง products
+CREATE TABLE tbl_products (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    products_id VARCHAR(50) UNIQUE NOT NULL,
+    products_name VARCHAR(200) NOT NULL,
+    stock INT DEFAULT 0,
+    price DECIMAL(10,2) DEFAULT 0.00,
+    category_id VARCHAR(50),
+    description TEXT,
+    barcode_id VARCHAR(100),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (category_id) REFERENCES tbl_category(category_id)
+);
+
+-- สร้างตาราง order
+CREATE TABLE tbl_order (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    order_id VARCHAR(50) NOT NULL,
+    products_id VARCHAR(50),
+    products_name VARCHAR(200),
+    barcode_id VARCHAR(100),
+    quantity INT NOT NULL,
+    disquantity INT DEFAULT 0,
+    email VARCHAR(100),
+    order_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (products_id) REFERENCES tbl_products(products_id)
+);
+                                </pre>
+                            </div>
+                            
+                            <h4>4. การรันแอพพลิเคชัน</h4>
+                            <div class="code-block">
+                                <pre>python app.py</pre>
+                            </div>
+                            
+                            <p>แอพพลิเคชันจะทำงานที่ <code>http://localhost:5000</code></p>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="database" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>โครงสร้างฐานข้อมูล</h2>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <h4>tbl_users</h4>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Field</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>id</td>
+                                                <td>INT</td>
+                                                <td>Primary Key</td>
+                                            </tr>
+                                            <tr>
+                                                <td>firstname</td>
+                                                <td>VARCHAR(100)</td>
+                                                <td>ชื่อจริง</td>
+                                            </tr>
+                                            <tr>
+                                                <td>lastname</td>
+                                                <td>VARCHAR(100)</td>
+                                                <td>นามสกุล</td>
+                                            </tr>
+                                            <tr>
+                                                <td>email</td>
+                                                <td>VARCHAR(100)</td>
+                                                <td>อีเมล (Unique)</td>
+                                            </tr>
+                                            <tr>
+                                                <td>password</td>
+                                                <td>VARCHAR(255)</td>
+                                                <td>รหัสผ่าน</td>
+                                            </tr>
+                                            <tr>
+                                                <td>role</td>
+                                                <td>VARCHAR(50)</td>
+                                                <td>บทบาท</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h4>tbl_category</h4>
+                                    <table class="table table-striped">
+                                        <thead>
+                                            <tr>
+                                                <th>Field</th>
+                                                <th>Type</th>
+                                                <th>Description</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>id</td>
+                                                <td>INT</td>
+                                                <td>Primary Key</td>
+                                            </tr>
+                                            <tr>
+                                                <td>category_id</td>
+                                                <td>VARCHAR(50)</td>
+                                                <td>รหัสหมวดหมู่</td>
+                                            </tr>
+                                            <tr>
+                                                <td>category_name</td>
+                                                <td>VARCHAR(100)</td>
+                                                <td>ชื่อหมวดหมู่</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <h4>บทบาทผู้ใช้งาน (User Roles)</h4>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Role</th>
+                                        <th>Description</th>
+                                        <th>Permissions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><span class="badge bg-danger">root_admin</span></td>
+                                        <td>ผู้ดูแลระบบสูงสุด</td>
+                                        <td>จัดการผู้ใช้งานทั้งหมด, เข้าถึงข้อมูลทั้งหมด</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-warning text-dark">administrator</span></td>
+                                        <td>ผู้ดูแลระบบ</td>
+                                        <td>จัดการผู้ใช้งาน (ยกเว้น root_admin), จัดการข้อมูล</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-info">moderator</span></td>
+                                        <td>ผู้ดูแลเนื้อหา</td>
+                                        <td>จัดการสินค้า, หมวดหมู่, คำสั่งซื้อ</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-primary">member</span></td>
+                                        <td>สมาชิก</td>
+                                        <td>ดูและจัดการคำสั่งซื้อของตนเอง</td>
+                                    </tr>
+                                    <tr>
+                                        <td><span class="badge bg-secondary">viewer</span></td>
+                                        <td>ผู้ดูข้อมูล</td>
+                                        <td>ดูข้อมูลเท่านั้น</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="authentication" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>ระบบยืนยันตัวตนและการควบคุมสิทธิ์</h2>
+                        </div>
+                        <div class="card-body">
+                            <h4>Role-Based Access Control (RBAC)</h4>
+                            <p>ระบบใช้ Decorator pattern สำหรับการควบคุมสิทธิ์การเข้าถึง:</p>
+                            
+                            <div class="code-block">
+                                <pre>
+@role_required(['root_admin', 'administrator', 'moderator'])
+def tbl_category():
+    # เฉพาะ root_admin, administrator, moderator เท่านั้น
+    pass
+
+@role_required(['root_admin', 'administrator', 'moderator', 'member', 'viewer'])
+def tbl_order():
+    # ผู้ใช้งานทุกประเภท (ยกเว้น guest)
+    pass
+                                </pre>
+                            </div>
+                            
+                            <h4>Session Management</h4>
+                            <p>ระบบใช้ Flask Sessions สำหรับการจัดเก็บข้อมูลการล็อกอิน:</p>
+                            
+                            <div class="code-block">
+                                <pre>
+# การล็อกอิน
+session['loggedin'] = True
+session['id'] = account['id']
+session['email'] = account['email']
+session['firstname'] = account['firstname']
+session['lastname'] = account['lastname']
+session['role'] = account['role']
+
+# การล็อกเอาท์
+session.pop('loggedin', None)
+session.pop('id', None)
+session.pop('email', None)
+session.pop('firstname', None)
+session.pop('lastname', None)
+session.pop('role', None)
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="api" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>API Documentation</h2>
+                        </div>
+                        <div class="card-body">
+                            <h4>API Endpoints</h4>
+                            
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Method</th>
+                                            <th>Endpoint</th>
+                                            <th>Description</th>
+                                            <th>Required Role</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/api/products</td>
+                                            <td>ดึงข้อมูลสินค้าทั้งหมด</td>
+                                            <td>All logged-in users</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/api/categories</td>
+                                            <td>ดึงข้อมูลหมวดหมู่ทั้งหมด</td>
+                                            <td>All logged-in users</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/api/users</td>
+                                            <td>ดึงข้อมูลผู้ใช้งาน</td>
+                                            <td>root_admin, administrator</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/export_products_csv</td>
+                                            <td>ส่งออกข้อมูลสินค้าเป็น CSV</td>
+                                            <td>root_admin, administrator, moderator</td>
+                                        </tr>
+                                        <tr>
+                                            <td>GET</td>
+                                            <td>/export_orders_pdf</td>
+                                            <td>ส่งออกรายงานคำสั่งซื้อเป็น PDF</td>
+                                            <td>root_admin, administrator, moderator, member</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <h4>ตัวอย่างการใช้งาน API</h4>
+                            <div class="code-block">
+                                <pre>
+// JavaScript - ดึงข้อมูลสินค้า
+fetch('/api/products')
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+    });
+
+// Python - เรียกใช้ API
+import requests
+
+response = requests.get('http://localhost:5000/api/products')
+if response.status_code == 200:
+    products = response.json()
+    print(products)
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="security" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>ความปลอดภัย</h2>
+                        </div>
+                        <div class="card-body">
+                            <h4>มาตรการความปลอดภัย</h4>
+                            <ul>
+                                <li><strong>Session Management:</strong> ใช้ Flask Sessions สำหรับการจัดเก็บข้อมูลการล็อกอิน</li>
+                                <li><strong>Role-Based Access:</strong> ควบคุมการเข้าถึงตามบทบาท</li>
+                                <li><strong>Input Validation:</strong> ตรวจสอบข้อมูลที่รับเข้ามา</li>
+                                <li><strong>SQL Injection Prevention:</strong> ใช้ Parameterized Queries</li>
+                            </ul>
+                            
+                            <h4>ข้อแนะนำด้านความปลอดภัย</h4>
+                            <div class="alert alert-warning">
+                                <strong>สำคัญ:</strong> ในการใช้งานจริง ควรจะ:
+                                <ul>
+                                    <li>ใช้ HTTPS สำหรับการเชื่อมต่อทั้งหมด</li>
+                                    <li>เข้ารหัสรหัสผ่านด้วย bcrypt หรือ argon2</li>
+                                    <li>ใช้ strong secret key สำหรับ Flask sessions</li>
+                                    <li>ตั้งค่า rate limiting เพื่อป้องกัน brute force attacks</li>
+                                    <li>ใช้ environment variables สำหรับ sensitive data</li>
+                                </ul>
+                            </div>
+                            
+                            <h4>ตัวอย่างการเข้ารหัสรหัสผ่าน</h4>
+                            <div class="code-block">
+                                <pre>
+from werkzeug.security import generate_password_hash, check_password_hash
+
+# การเข้ารหัสรหัสผ่าน
+hashed_password = generate_password_hash('user_password')
+
+# การตรวจสอบรหัสผ่าน
+if check_password_hash(hashed_password, 'user_password'):
+    print("รหัสผ่านถูกต้อง")
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="deployment" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>การ Deploy และการผลิต</h2>
+                        </div>
+                        <div class="card-body">
+                            <h4>1. การเตรียมสำหรับ Production</h4>
+                            <div class="code-block">
+                                <pre>
+# ปิด debug mode
+app.run(debug=False)
+
+# หรือใช้ environment variable
+import os
+debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() == 'true'
+app.run(debug=debug_mode)
+                                </pre>
+                            </div>
+                            
+                            <h4>2. การใช้งานกับ WSGI Server</h4>
+                            <div class="code-block">
+                                <pre>
+# ติดตั้ง Gunicorn
+pip install gunicorn
+
+# รันด้วย Gunicorn
+gunicorn --bind 0.0.0.0:8000 app:app
+                                </pre>
+                            </div>
+                            
+                            <h4>3. ตั้งค่า Environment Variables</h4>
+                            <div class="code-block">
+                                <pre>
+# .env file
+FLASK_SECRET_KEY=your-super-secret-key-here
+MYSQL_HOST=localhost
+MYSQL_USER=root
+MYSQL_PASSWORD=your-password
+MYSQL_DATABASE=project_bin
+FLASK_DEBUG=False
+                                </pre>
+                            </div>
+                            
+                            <h4>4. การตั้งค่า Web Server (Nginx)</h4>
+                            <div class="code-block">
+                                <pre>
+server {
+    listen 80;
+    server_name your-domain.com;
+    
+    location / {
+        proxy_pass http://127.0.0.1:8000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+    }
+    
+    location /static {
+        alias /path/to/your/app/static;
+    }
+}
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="troubleshooting" class="mb-5">
+                    <div class="card">
+                        <div class="card-header">
+                            <h2>การแก้ปัญหา</h2>
+                        </div>
+                        <div class="card-body">
+                            <h4>ปัญหาที่พบบ่อย</h4>
+                            
+                            <div class="accordion" id="troubleshootingAccordion">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="problem1">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#solution1">
+                                            ไม่สามารถเชื่อมต่อฐานข้อมูลได้
+                                        </button>
+                                    </h2>
+                                    <div id="solution1" class="accordion-collapse collapse show" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <strong>สาเหตุ:</strong> การตั้งค่าฐานข้อมูลไม่ถูกต้อง<br>
+                                            <strong>วิธีแก้:</strong>
+                                            <ol>
+                                                <li>ตรวจสอบว่า MySQL เริ่มต้นแล้ว</li>
+                                                <li>ตรวจสอบ username, password, database name</li>
+                                                <li>ตรวจสอบว่าผู้ใช้มีสิทธิ์เข้าถึงฐานข้อมูล</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="problem2">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#solution2">
+                                            ไม่สามารถล็อกอินได้
+                                        </button>
+                                    </h2>
+                                    <div id="solution2" class="accordion-collapse collapse" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <strong>สาเหตุ:</strong> ไม่มีผู้ใช้งานในระบบ<br>
+                                            <strong>วิธีแก้:</strong>
+                                            <ol>
+                                                <li>สร้างผู้ใช้งานผ่านหน้าสมัครสมาชิก</li>
+                                                <li>หรือเพิ่มผู้ใช้งานโดยตรงในฐานข้อมูล</li>
+                                                <li>ตรวจสอบว่าตาราง tbl_users มีข้อมูลอยู่</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="problem3">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#solution3">
+                                            ไม่สามารถส่งออก PDF ได้
+                                        </button>
+                                    </h2>
+                                    <div id="solution3" class="accordion-collapse collapse" data-bs-parent="#troubleshootingAccordion">
+                                        <div class="accordion-body">
+                                            <strong>สาเหตุ:</strong> ไม่มี xhtml2pdf library<br>
+                                            <strong>วิธีแก้:</strong>
+                                            <ol>
+                                                <li>ติดตั้ง xhtml2pdf: <code>pip install xhtml2pdf</code></li>
+                                                <li>ตรวจสอบว่า template PDF อยู่ที่ถูกต้อง</li>
+                                                <li>ตรวจสอบ permission ในการเขียนไฟล์</li>
+                                            </ol>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <h4>การ Debug</h4>
+                            <div class="code-block">
+                                <pre>
+# เปิด debug mode
+app.run(debug=True)
+
+# หรือใช้ logging
+import logging
+logging.basicConfig(level=logging.DEBUG)
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+{% endblock %}
